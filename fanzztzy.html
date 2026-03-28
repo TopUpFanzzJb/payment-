@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Saya</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: black;
+  overflow: hidden;
+}
+
+/* FULLSCREEN APP */
+.app {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow-y: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* CANVAS */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+
+/* TITLE GLITCH */
+.title {
+  text-align: center;
+  color: #38bdf8;
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  animation: glitch 1s infinite;
+}
+
+@keyframes glitch {
+  0% { text-shadow: 2px 0 red, -2px 0 blue; }
+  20% { text-shadow: -2px 0 red, 2px 0 blue; }
+  40% { text-shadow: 2px 2px red, -2px -2px blue; }
+  60% { text-shadow: -2px 2px red, 2px -2px blue; }
+  80% { text-shadow: 2px 0 red, -2px 0 blue; }
+  100% { text-shadow: 0 0 10px #38bdf8; }
+}
+
+/* CARD */
+.account {
+  background: rgba(255,255,255,0.06);
+  padding: 15px;
+  border-radius: 15px;
+  margin-bottom: 15px;
+  animation: fadeIn 0.8s ease;
+  border: 1px solid rgba(56,189,248,0.2);
+}
+
+/* NEON PULSE */
+.account:hover {
+  box-shadow: 0 0 20px #38bdf8, 0 0 40px #38bdf8;
+  transform: scale(1.03);
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(20px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+/* DATA */
+.data {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  margin: 6px 0;
+  font-size: 14px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+}
+
+.left i {
+  margin-right: 8px;
+  color: #38bdf8;
+}
+
+.actions i {
+  margin-left: 10px;
+  cursor: pointer;
+  color: #aaa;
+}
+
+.actions i:hover {
+  color: #38bdf8;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  font-size: 12px;
+  color: #94a3b8;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="bg"></canvas>
+
+<div class="app">
+  <div class="title">⚡ DATA LOGIN ⚡</div>
+
+  <!-- TEMPLATE AKUN (TINGGAL COPY) -->
+  
+  <div class="account">
+    <div class="data">
+      <div class="left"><i class="fa fa-envelope"></i> fand1fardya39@gmail.com</div>
+      <div class="actions">
+        <i class="fa fa-copy" onclick="copyText('email1@gmail.com')"></i>
+      </div>
+    </div>
+    <div class="data">
+      <div class="left">
+        <i class="fa fa-lock"></i>
+        <span class="pass">jembut</span>
+      </div>
+      <div class="actions">
+        <i class="fa fa-eye" onclick="togglePass(this)"></i>
+        <i class="fa fa-copy" onclick="copyText('password1')"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="account">
+    <div class="data">
+      <div class="left"><i class="fa fa-envelope"></i> rafl7tahum1l60@gmail.com</div>
+      <div class="actions">
+        <i class="fa fa-copy" onclick="copyText('email2@gmail.com')"></i>
+      </div>
+    </div>
+    <div class="data">
+      <div class="left">
+        <i class="fa fa-lock"></i>
+        <span class="pass">haibsng</span>
+      </div>
+      <div class="actions">
+        <i class="fa fa-eye" onclick="togglePass(this)"></i>
+        <i class="fa fa-copy" onclick="copyText('password2')"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="account">
+    <div class="data">
+      <div class="left"><i class="fa fa-envelope"></i> akufs1ngapura54321@gmail.com</div>
+      <div class="actions">
+        <i class="fa fa-copy" onclick="copyText('email3@gmail.com')"></i>
+      </div>
+    </div>
+    <div class="data">
+      <div class="left">
+        <i class="fa fa-lock"></i>
+        <span class="pass">racingabizz</span>
+      </div>
+      <div class="actions">
+        <i class="fa fa-eye" onclick="togglePass(this)"></i>
+        <i class="fa fa-copy" onclick="copyText('password3')"></i>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    © 2026 FanzzTzy Mode Hati Hati🥵
+  </div>
+</div>
+
+<script>
+function togglePass(el) {
+  let pass = el.parentElement.parentElement.querySelector(".pass");
+  if (pass.innerText.includes("*")) {
+    pass.innerText = pass.dataset.real;
+  } else {
+    pass.dataset.real = pass.innerText;
+    pass.innerText = "******";
+  }
+}
+
+function copyText(text) {
+  navigator.clipboard.writeText(text);
+  alert("Disalin: " + text);
+}
+
+/* BINTANG */
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let stars = [];
+
+for (let i = 0; i < 120; i++) {
+  stars.push({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: Math.random()*2
+  });
+}
+
+function draw() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = "white";
+  stars.forEach(s => {
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI*2);
+    ctx.fill();
+    s.y += 0.4;
+    if (s.y > canvas.height) s.y = 0;
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+</body>
+  </html>
