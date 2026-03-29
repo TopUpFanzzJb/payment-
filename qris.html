@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pembayaran</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<style>
+body {
+  margin:0;
+  font-family:'Segoe UI', sans-serif;
+  background:#f5f6fa;
+}
+
+/* HEADER */
+.header {
+  background:linear-gradient(135deg,#6a1b9a,#8e24aa);
+  color:white;
+  padding:16px;
+  font-size:16px;
+  font-weight:bold;
+}
+
+/* CARD */
+.card {
+  margin:15px;
+  background:white;
+  border-radius:20px;
+  padding:22px;
+  text-align:center;
+  box-shadow:0 8px 25px rgba(0,0,0,0.08);
+  animation:fade 0.5s ease;
+}
+
+@keyframes fade {
+  from {opacity:0; transform:translateY(15px);}
+  to {opacity:1; transform:translateY(0);}
+}
+
+/* MERCHANT */
+.merchant {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.logo {
+  width:45px;
+  height:45px;
+  background:#eee;
+  border-radius:12px;
+}
+
+.merchant-text {
+  text-align:left;
+}
+
+.merchant-name {
+  font-weight:bold;
+}
+
+.merchant-sub {
+  font-size:12px;
+  color:#888;
+}
+
+/* NOMINAL */
+.nominal {
+  font-size:28px;
+  font-weight:bold;
+  margin:15px 0;
+}
+
+/* STATUS */
+.status {
+  color:#5c6bc0;
+  font-weight:600;
+  font-size:14px;
+}
+
+/* QR */
+#qrcode {
+  margin:20px auto;
+}
+
+/* LOADER */
+.loader {
+  width:35px;
+  height:35px;
+  border:3px solid #eee;
+  border-top:3px solid #8e24aa;
+  border-radius:50%;
+  margin:15px auto;
+  animation:spin 1s linear infinite;
+}
+
+@keyframes spin {
+  100% {transform:rotate(360deg);}
+}
+
+/* TIMER */
+.timer {
+  font-size:13px;
+  color:#777;
+}
+
+/* NOTIF */
+.notif {
+  position:fixed;
+  top:20px;
+  right:15px;
+  background:#6a1b9a;
+  color:white;
+  padding:12px 14px;
+  border-radius:12px;
+  font-size:13px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.2);
+  display:none;
+  animation:slide 0.4s ease;
+}
+
+@keyframes slide {
+  from {transform:translateX(100%);}
+  to {transform:translateX(0);}
+}
+
+/* FOOTER BUTTON */
+.btn {
+  margin-top:20px;
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#6a1b9a,#8e24aa);
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+/* SMALL TEXT */
+.note {
+  font-size:11px;
+  color:#aaa;
+  margin-top:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">Pembayaran</div>
+
+<div class="card">
+
+  <!-- MERCHANT -->
+  <div class="merchant">
+    <div class="logo"></div>
+    <div class="merchant-text">
+      <div class="merchant-name">Top Up Digital</div>
+      <div class="merchant-sub">QRIS Merchant</div>
+    </div>
+  </div>
+
+  <!-- NOMINAL -->
+  <div class="nominal">Rp 20.000</div>
+
+  <!-- STATUS -->
+  <div class="status" id="status">Menunggu pembayaran...</div>
+  <div class="timer" id="timer">Sisa waktu: 30 detik</div>
+
+  <!-- QR -->
+  <div id="qrcode"></div>
+
+  <!-- LOADER -->
+  <div class="loader"></div>
+
+  <button class="btn">Saya sudah bayar</button>
+
+  <div class="note">Simulasi pembayaran (bukan QRIS asli)</div>
+
+</div>
+
+<div class="notif" id="notif">Pembayaran diterima ✔</div>
+
+<script>
+let redirectLink = "https://username.github.io/foto.html";
+
+// QR
+new QRCode(document.getElementById("qrcode"), {
+  text: window.location.href,
+  width: 200,
+  height: 200
+});
+
+// TIMER
+let time = 30;
+let timerEl = document.getElementById("timer");
+
+let countdown = setInterval(() => {
+  time--;
+  timerEl.innerText = "Sisa waktu: " + time + " detik";
+
+  if(time <= 0){
+    clearInterval(countdown);
+    timerEl.innerText = "Waktu habis";
+  }
+},1000);
+
+// STATUS FLOW
+setTimeout(()=>{
+  document.getElementById("status").innerText = "Memproses pembayaran...";
+},4000);
+
+setTimeout(()=>{
+  document.getElementById("status").innerText = "Pembayaran berhasil ✔";
+  document.getElementById("status").style.color = "green";
+  document.getElementById("notif").style.display = "block";
+},8000);
+
+setTimeout(()=>{
+  window.location.href = redirectLink;
+},11000);
+</script>
+
+</body>
+  </html>
